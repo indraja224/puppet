@@ -44,3 +44,5 @@ elseif ($StatusConfirm -eq $true) {Write-host Requested computer object $Hostnam
 #Write-Host $DomainName, $DC, $Hostname
 Clear-Variable DomainName, DC, Hostname, Status, StatusConfirm
 }
+
+write-host "the script is completed"
