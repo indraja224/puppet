@@ -1,6 +1,15 @@
+#!/usr/bin/env pwsh
+[CmdletBinding()]
+Param(
+  [Parameter(Mandatory = $True)]
+  [String[]] $fqdn
+)
 
-$host_names= $env:PT_hostnames
-$hosts = $host_names| ConvertFrom-Json
+$fqdnpattern="^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])\.([a-zA-Z0-9]{2,})$"
+if($fqdn -match $fqdnpattern){
+
+
+$hosts = $fqdn  #| ConvertFrom-Json
 foreach($FQDN in $hosts){
 $DomainName=$FQDN.Substring($FQDN.IndexOf(".") + 1)
 $Hostname = $FQDN.split('.')[0]
@@ -49,7 +58,20 @@ If ($statusconfirm -eq $false) {Write-host Requested computer object $Hostname d
 elseif ($StatusConfirm -eq $true) {Write-host Requested computer object $Hostname still enabled on AD console}
 Clear-Variable DomainName, DC, Hostname, Status, StatusConfirm
 
+
+
+
+
+
+
 }
 
+
+}
+
+}
+
+else{
+write-host "Please enter the valide FQDN "
 
 }
