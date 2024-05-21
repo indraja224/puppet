@@ -1,8 +1,16 @@
-$host_names= $env:PT_hostnames
-$hosts = $host_names| ConvertFrom-Json
-foreach($FQDN in $hosts){
-$DomainName=$FQDN.Substring($FQDN.IndexOf(".") + 1)
-$Hostname = $FQDN.split('.')[0]
+#!/usr/bin/env pwsh
+[CmdletBinding()]
+Param(
+  [Parameter(Mandatory = $True)]
+  [String[]] $fqdn
+)
+
+$fqdnpattern="^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])\.([a-zA-Z0-9]{2,})$"
+$hosts = $fqdn
+foreach($F in $hosts){
+if($f -match $fqdnpattern){
+$DomainName=$F.Substring($F.IndexOf(".") + 1)
+$Hostname = $F.split('.')[0]
 switch($DomainName){
 'PRPRIVMGMT.Intraxa' {$DC='cdlz0001.PRPRIVMGMT.intraxa'}
 'PPPRIVMGMT.Intraxa' {$DC='BDLZ0001.PPPRIVMGMT.intraxa'}
@@ -30,12 +38,10 @@ switch($DomainName){
 'ch.doleni.dev'                       {$DC='WXCADSP2.ch.doleni.dev'}
 'applications.services.axa-tech.intraxa'    {$DC='W36ADS03.applications.services.axa-tech.intraxa'}
 'adatum.com'                            {$DC='ec2amaz-fkd44pd.adatum.com'}
- default                             {Write-host $DomainName does not exist in our scope -ForegroundColor Red; $DC=1}
+default                             {Write-host $DomainName does not exist in our scope -ForegroundColor Red; $DC=1}
 }
-
-if($DC -ne 1){
-
 try{
+if($DC -ne 1){
 $rdp_group="srv_"+$hostname+"_rdp"
 $admin_group="srv_"+$hostname+"_admin"
 $Status= Get-ADComputer -Identity $Hostname -server $DC
@@ -65,15 +71,16 @@ else{
 }
 
 
-
-
+}
 }
 catch{
 Write-Host " $_" -ForegroundColor Red
 
 }
+
 }
-
-
+else{
+write-host "Please enter the valide FQDN "
+}
 
 }
