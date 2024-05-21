@@ -1,0 +1,10 @@
+{
+    "input_method": "powershell",
+    "parameters": {
+      "fqdn": {
+        "description": "Name of computer to delete",
+        "type": "Array[String]"
+  
+      }
+    }
+  }

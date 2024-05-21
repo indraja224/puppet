@@ -6,13 +6,11 @@ Param(
 )
 
 $fqdnpattern="^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])\.([a-zA-Z0-9]{2,})$"
-if($fqdn -match $fqdnpattern){
-
-
-$hosts = $fqdn  #| ConvertFrom-Json
-foreach($FQDN in $hosts){
-$DomainName=$FQDN.Substring($FQDN.IndexOf(".") + 1)
-$Hostname = $FQDN.split('.')[0]
+$hosts = $fqdn
+foreach($F in $hosts){
+if($f -match $fqdnpattern){
+$DomainName=$F.Substring($F.IndexOf(".") + 1)
+$Hostname = $F.split('.')[0]
 switch($DomainName){
 'PRPRIVMGMT.Intraxa' {$DC='cdlz0001.PRPRIVMGMT.intraxa'}
 'PPPRIVMGMT.Intraxa' {$DC='BDLZ0001.PPPRIVMGMT.intraxa'}
@@ -42,10 +40,8 @@ switch($DomainName){
 'adatum.com'                            {$DC='ec2amaz-fkd44pd.adatum.com'}
 default                             {Write-host $DomainName does not exist in our scope -ForegroundColor Red; $DC=1}
 }
-
+try{
 if($DC -ne 1){
-
-
 $Status= Get-ADComputer -Identity $Hostname -server $DC
 If($status) {
 Set-ADComputer -Identity $Hostname -server $DC -Enabled $false
@@ -58,20 +54,16 @@ If ($statusconfirm -eq $false) {Write-host Requested computer object $Hostname d
 elseif ($StatusConfirm -eq $true) {Write-host Requested computer object $Hostname still enabled on AD console}
 Clear-Variable DomainName, DC, Hostname, Status, StatusConfirm
 
-
-
-
-
-
-
 }
-
+}
+catch{
+Write-Host " $_" -ForegroundColor Red
 
 }
 
 }
-
 else{
 write-host "Please enter the valide FQDN "
+}
 
 }
