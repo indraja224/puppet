@@ -1,0 +1,27 @@
+{
+    "discription": "Create AD users in Active directory",
+    "input_method":"powershell",
+    "parameters": {
+        "groupname":{
+            "discription":"Ad group name",
+            "type":"Array[String]",
+            "required": true
+        },
+        "scope":{
+            "discription":"Scope of the Group",
+            "type":"Enum['DomainLocal','Global','Universal']",
+            "required": false,
+            "default": "Global"
+        },
+        "grouptype":{
+            "discription":"Ad Group type ",
+            "type":"Enum['Security','Distribution']",
+            "required": false,
+            "default": "Security"
+        }
+
+    }
+
+
+
+}
