@@ -1,0 +1,26 @@
+{
+    "discription": "Assign cyber arc shared account groups",
+    "input_method":"powershell",
+    "parameters": {
+        "servers":{
+            "discription":"list of servers",
+            "type":"Array[String]",
+            "required": true
+        },
+        "groups":{
+            "discription":"Groups to assign",
+            "type":"Enum['Rdp','admin']",
+            "required": false
+
+        },
+        "cyber_arc_account":{
+            "discription":"given cyberarc shared account",
+            "type":"String",
+            "required": false
+        }
+
+    }
+
+
+
+}
