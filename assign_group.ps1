@@ -4,11 +4,12 @@ Param(
   [Parameter(Mandatory = $True)]
   [String[]] $servers,
   [Parameter(Mandatory = $True)]
-  [String] $groups,
+  [String[]] $groups,
   [Parameter(Mandatory = $True)]
   [String] $cyber_arc_account
 
 )
+$serverNamePattern = "^[a-zA-Z0-9-]+$"
 $cyber_arc_account=$cyber_arc_account+"*"
 $shared_accounts_list=(Get-ADUser -Filter {Name -like $cyber_arc_account}).name
 function assign_admin($srv){
@@ -53,12 +54,17 @@ write-host "the Group $grp does not exist"
 }
 
 foreach($srv in $servers){
-if($groups -eq "admin"){
+if($srv -match $serverNamePattern){
+foreach($g in $groups){
+if($g -eq "admin"){
 assign_admin -srv $srv
 }
-if($groups -eq "rdp"){
+if($g -eq "rdp"){
 assign_rdp -srv $srv
 }
-
 }
-
+}
+else{
+write-host "$srv not valide,please enter valide server name"
+}
+}
