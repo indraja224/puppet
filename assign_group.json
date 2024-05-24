@@ -9,7 +9,7 @@
         },
         "groups":{
             "discription":"Groups to assign",
-            "type":"Enum['Rdp','admin']",
+            "type":"Array[String]",
             "required": false
 
         },
