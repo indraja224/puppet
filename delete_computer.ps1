@@ -15,13 +15,33 @@ try
     $dc=Get-ADDomainController -Filter { Domain -eq $domain }  | Select-Object -ExpandProperty HostName
     if ($dc) {
         Write-host "Domain Controller of $f : $dc" -ForegroundColor Green
-        if((Get-ADComputer -Identity $hostname -server $DC).enabled -eq $true ){
-        Set-ADComputer -Identity $hostname -server $DC -Enabled $false
-        Write-host "Requested computer object $hostname disabled from $dc AD console"
+        $rdp_group="srv_"+$hostname+"_rdp"
+        $admin_group="srv_"+$hostname+"_admin"
+        $Status= Get-ADComputer -Identity $Hostname -server $DC
+        If($status){
+        Remove-ADComputer -Identity $hostname -server $DC -Confirm:$false
+        write-host "$hostname removed from AD console.."
+        }
+        else {
+        Write-host $Hostname not found on AD Console -ForegroundColor Cyan
+        }
+
+
+        if( Get-ADGroup -Filter {Name -eq $rdp_group} -server $dc){
+        Remove-ADGroup -Identity $rdp_group -server $dc -Confirm:$false
+        Write-Host "Group $rdp_group has been deleted."
         }
         else{
-        Write-host "Requested computer object $hostname from $dc already disabled "
+            Write-Host "Group $rdp_group does not exist."
         }
+
+        if( Get-ADGroup -Filter {Name -eq $admin_group} -server $dc){
+        Remove-ADGroup -Identity $admin_group -server $dc -Confirm:$false
+        Write-Host "Group $admin_group has been deleted."
+        }
+        else{
+    Write-Host "Group $admin_group does not exist."
+     }
     }
     else {
         Write-Output "Unable to find Domain Controller with $domain"
@@ -35,8 +55,15 @@ try
 
     }
 
+
+
+
+
 }
 else{
-write-host "please provide the FQDN of $f" -ForegroundColor Red
+Write-Output "Please enter the fqdn of $f"
 }
+
+
+
 }
