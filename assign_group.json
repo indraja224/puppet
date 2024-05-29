@@ -17,10 +17,11 @@
             "discription":"given cyberarc shared account",
             "type":"String",
             "required": false
+        },
+         "domain":{
+            "discription":"given domain controller",
+            "type":"String",
+            "required": false
         }
-
     }
-
-
-
 }
